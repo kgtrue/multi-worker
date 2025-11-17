@@ -7,6 +7,8 @@
     deploy:
       mode: replicated
       replicas: 6
+    networks:
+      - loadbalancing
   db:
     image: postgres
     container_name: postgres_db
@@ -20,3 +22,18 @@
       retries: 5
       start_period: 30s
       timeout: 10s
+    networks:
+      - loadbalancing
+  nginx:
+    build:
+      context: .
+      dockerfile: src/nginxlb/Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - loadbalancing
+    depends_on:
+      - workerapi   
+      
+networks:
+  loadbalancing:

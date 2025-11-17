@@ -9,6 +9,9 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0"/>
+        <PackageReference Include="Redoc.AspNetCore" Version="1.0.0" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.10.3" />
+        <PackageReference Include="Scalar.AspNetCore.Microsoft" Version="2.10.3" />
         <PackageReference Include="TickerQ" Version="10.0.0-beta.16" />
         <PackageReference Include="TickerQ.Caching.StackExchangeRedis" Version="10.0.0-beta.16" />
         <PackageReference Include="TickerQ.Dashboard" Version="10.0.0-beta.16" />
