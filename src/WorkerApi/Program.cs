@@ -19,6 +19,7 @@ builder.Services.AddTickerQ(options =>
         dashboardOptions.SetBasePath("/admin/jobs");
     });
     
+    /*
     options.AddOperationalStore(efOptions =>
     {
         // Use built-in TickerQDbContext with connection string
@@ -34,6 +35,7 @@ builder.Services.AddTickerQ(options =>
         // Optional: Configure pool size
         efOptions.SetDbContextPoolSize(34);
     });
+    */
     
     options.AddStackExchangeRedis(redisOptions =>
     {
