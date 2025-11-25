@@ -19,16 +19,17 @@
         <PackageReference Include="Scalar.AspNetCore" Version="2.10.3" />
         <PackageReference Include="Scalar.AspNetCore.Microsoft" Version="2.10.3" />
         <PackageReference Include="TickerQ" Version="10.0.0" />
-        <PackageReference Include="TickerQ.Caching.StackExchangeRedis" Version="10.0.0" />
-        <PackageReference Include="TickerQ.Dashboard" Version="10.0.0" />
         <PackageReference Include="TickerQ.EntityFrameworkCore" Version="10.0.0" />
-        <PackageReference Include="TickerQ.Instrumentation.OpenTelemetry" Version="10.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>

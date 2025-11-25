@@ -1,4 +1,16 @@
 ﻿services:
+  
+  #migration:
+  #  image: workerapi
+  #  build:
+  #    context: .
+  #    dockerfile: src/WorkerApi/Dockerfile
+  #  command: dotnet ef database update --context TickerQDbContext
+  #  environment:
+  #    - ConnectionStrings__TickerQ=Server=127.0.0.1;Port=5432;Database=TickerQ;User Id=postgres;Password=p@55w0rd;
+  #  depends_on:
+  #    - db
+  
   workerapi:
     image: workerapi
     build:
