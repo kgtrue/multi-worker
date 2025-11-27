@@ -7,10 +7,12 @@
   #    dockerfile: src/WorkerApi/Dockerfile
   #  command: dotnet ef database update --context TickerQDbContext
   #  environment:
-  #    - ConnectionStrings__TickerQ=Server=127.0.0.1;Port=5432;Database=TickerQ;User Id=postgres;Password=p@55w0rd;
+  #    - ConnectionStrings__TickerQ=Server=db;Port=5432;Database=TickerQ;User Id=postgres;Password=p@55w0rd;
+  #  networks:
+  #    - loadbalancing
   #  depends_on:
   #    - db
-  
+  #
   workerapi:
     image: workerapi
     build:
@@ -19,11 +21,14 @@
     deploy:
       mode: replicated
       replicas: 6
+    environment:
+      - ConnectionStrings__TickerQ=Server=db;Port=5432;Database=TickerQ;User Id=postgres;Password=p@55w0rd;
     networks:
       - loadbalancing
     depends_on:
       - db
       - redis
+
   db:
     image: postgres
     container_name: postgres_db
@@ -39,6 +44,7 @@
       timeout: 10s
     networks:
       - loadbalancing
+  
   nginx:
     build:
       context: .
@@ -49,6 +55,7 @@
       - loadbalancing
     depends_on:
       - workerapi
+  
   redis:
     container_name: redis-server
     image: redis

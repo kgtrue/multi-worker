@@ -19,7 +19,7 @@ public class TickerQDbContextFactory : IDesignTimeDbContextFactory<TickerQDbCont
         var connectionString = _configuration.GetConnectionString("TickerQ");
 
         var optionsBuilder = new DbContextOptionsBuilder<TickerQDbContext>();
-        optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder.UseNpgsql(connectionString);
 
         return new TickerQDbContext(optionsBuilder.Options);
     }
