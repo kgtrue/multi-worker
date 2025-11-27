@@ -20,7 +20,7 @@
       dockerfile: src/WorkerApi/Dockerfile
     deploy:
       mode: replicated
-      replicas: 6
+      replicas: 20
     environment:
       - ConnectionStrings__TickerQ=Server=db;Port=5432;Database=TickerQ;User Id=postgres;Password=p@55w0rd;
     networks:

@@ -1,5 +1,5 @@
-using System.Net;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Trace;
 using Persistence;
 using Scalar.AspNetCore;
 using TickerQ.Caching.StackExchangeRedis.DependencyInjection;
@@ -7,6 +7,7 @@ using TickerQ.Dashboard.DependencyInjection;
 using TickerQ.DependencyInjection;
 using TickerQ.EntityFrameworkCore.DependencyInjection;
 using TickerQ.EntityFrameworkCore.DbContextFactory;
+using TickerQ.Instrumentation.OpenTelemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -16,8 +17,16 @@ var connectionString = builder.Configuration.GetConnectionString("TickerQ");
 
 builder.Services.RegisterPersistence(builder.Configuration);
 
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing =>
+    {
+        tracing.AddSource("TickerQ")
+            .AddConsoleExporter();
+    });
+
 builder.Services.AddTickerQ(options =>
 {
+    options.AddOpenTelemetryInstrumentation();
     options.AddDashboard(dashboardOptions =>
     {
         // Custom base path
@@ -35,20 +44,24 @@ builder.Services.AddTickerQ(options =>
                     cfg.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), ["40P01"]);
                 });
         });
-
         // Optional: Configure pool size
         efOptions.SetDbContextPoolSize(34);
     });
-
-
+    
     options.AddStackExchangeRedis(redisOptions =>
     {
         redisOptions.Configuration = "redis:6379";
-        redisOptions.InstanceName = "redis-tickerq:";
+        redisOptions.InstanceName = "tickerq:";
         redisOptions.NodeHeartbeatInterval = TimeSpan.FromMinutes(1);
     });
-
-    options.ConfigureScheduler(scheduler => { scheduler.NodeIdentifier = Dns.GetHostName(); });
+    var envName = Environment.MachineName;
+    
+    options.ConfigureScheduler(scheduler =>
+    {
+        scheduler.NodeIdentifier = $"server-{envName}";
+        scheduler.MaxConcurrency = 20;
+    });
+    
 });
 var app = builder.Build();
 
