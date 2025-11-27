@@ -1,25 +1,18 @@
 using System.Net;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+using Persistence;
 using Scalar.AspNetCore;
 using TickerQ.DependencyInjection;
 using TickerQ.EntityFrameworkCore.DependencyInjection;
 using TickerQ.EntityFrameworkCore.DbContextFactory;
-using WorkerApi;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+var connectionString = builder.Configuration.GetConnectionString("TickerQ");
 
-var connectionString =
-    builder.Configuration.GetConnectionString("TickerQ")
-    ?? throw new InvalidOperationException("Connection string"
-                                           + "'DefaultConnection' not found.");
-
-builder.Services.AddDbContext<TickerQDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
+builder.Services.RegisterPersistence(builder.Configuration);
 
 builder.Services.AddTickerQ(options =>
 {
@@ -36,6 +29,7 @@ builder.Services.AddTickerQ(options =>
             optionsBuilder.UseNpgsql(connectionString, 
                 cfg =>
                 {
+                    cfg.MigrationsAssembly("Persistence");
                     cfg.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), ["40P01"]);
                 });
         });

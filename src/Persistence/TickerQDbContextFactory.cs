@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using TickerQ.EntityFrameworkCore.DbContextFactory;
 
-namespace WorkerApi;
+namespace Persistence;
 
 public class TickerQDbContextFactory : IDesignTimeDbContextFactory<TickerQDbContext>
 {
@@ -18,7 +19,7 @@ public class TickerQDbContextFactory : IDesignTimeDbContextFactory<TickerQDbCont
         var connectionString = _configuration.GetConnectionString("TickerQ");
 
         var optionsBuilder = new DbContextOptionsBuilder<TickerQDbContext>();
-        optionsBuilder.UseNpgsql(connectionString);
+        optionsBuilder.UseSqlServer(connectionString);
 
         return new TickerQDbContext(optionsBuilder.Options);
     }
